@@ -1,13 +1,27 @@
-# Báo cáo Day 13 — <Họ và tên>, <MSSV>
-
-> **Cách dùng mẫu này:** đổi tên file thành `<MSSV>_<HoTen>.md` (họ tên không dấu, viết liền), ví dụ `2A202600123_NguyenVanAn.md`. Đổi tên, đừng chép thành file thứ hai.
->
-> Xoá mọi dấu TODO và dòng gợi ý (dòng bắt đầu bằng `>`). Mỗi con số lấy từ **bảng A** hoặc **phiếu tự kiểm** trong `submission/`, kèm đơn vị (m, °). Ảnh để trong `report/individual/images/` (nộp LMS trong file zip, không commit); trong báo cáo chỉ ghi **tên file ảnh**. Báo cáo này nằm trên repo public: không chép biển số, chữ trên biển hiệu hay biển chỉ đường, tên đường, địa danh; nhắc tới bạn khác thì ghi MSSV, không ghi họ tên. Cả báo cáo ~2 trang.
+# Báo cáo Day 13 — Vũ Tiến Vinh, 2A202603269
 
 ## 1. Kết luận trước
-TODO(học viên): mã số, task `D13-…`, 10 frame của bạn; hệ điều hành, trình duyệt, phiên bản CVAT (tên tài khoản → About); MSSV bạn ngồi cạnh. Rồi 2–3 câu: tổng bao nhiêu cuboid, frame nào ít nhất và vì sao; `selfcheck` cờ bao nhiêu cuboid trên tổng số; bạn tin phần nào nhất và phần nào còn yếu nhất (hướng, đáy, kích thước, class, vật xa).
 
-TODO(học viên): cách dùng CVAT, 3 dòng: đổi góc nhìn (nhìn từ trên xuống, xoay, dời); vẽ và chỉnh một cuboid (Shape, nháy đúp, Top/Side/Front); bật mũi tên hướng (Cuboid orientation) và xem cuboid trên ảnh camera (`preview`).
+MSSV: **2A202603269**. Task cá nhân: `D13-2A202603269`. Hệ điều hành: Windows. Tài khoản CVAT: `tienvinh`. CVAT Server **2.74.1**, SDK **2.83.0** theo log `sync`; log có cảnh báo không tương thích phiên bản nhưng cả ba lần vẫn xuất được bảng A, preview và phiếu tự kiểm. TODO(học viên): xác nhận trình duyệt, phiên bản UI trong About và MSSV người kiểm chéo.
+
+Đã gán nhãn **121 cuboid trên đủ 10 frame**, gồm 90 Car, 4 Truck, 6 Bus, 12 Pedestrian và 9 Cyclist. Hai frame ít hộp nhất là `s02f00` và `s03f55`, mỗi frame 7 hộp; TODO(học viên): bổ sung lý do từ quan sát. Frame đầu có 30 hộp, các frame còn lại đều có ít nhất 7 hộp, đáp ứng yêu cầu số lượng 8/5 của buổi lab. Số hộp có cảnh báo qua ba lần `sync` là **20 → 19 → 18**, tổng số hộp giữ nguyên 121; bản cuối còn **18/121** hộp có cờ. Cờ không đồng nghĩa với lỗi chắc chắn và không phải điểm chấm.
+
+| Frame | Số cuboid |
+|---|---:|
+| s01f01 | 30 |
+| s01f17 | 8 |
+| s02f00 | 7 |
+| s02f29 | 8 |
+| s03f22 | 16 |
+| s03f55 | 7 |
+| s04f28 | 15 |
+| s04f45 | 9 |
+| s05f03 | 11 |
+| s05f18 | 10 |
+
+Có **1 hộp có tâm xa hơn 50 m**, không được chấm; các phân tích cực trị ở mục 5 phân biệt toàn bộ bảng A và vùng được chấm. TODO(học viên): tự đánh giá phần tin nhất và phần còn yếu nhất sau khi xem lại CVAT.
+
+Cách thao tác: xoay và dời cảnh trong khung 3D lớn, dùng con lăn để zoom và xoay góc nhìn từ trên xuống. Cuboid được tạo bằng **Shape**, nháy đúp để đặt; chỉnh tâm, dài, rộng và yaw ở Top, chỉnh đáy và chiều cao ở Side/Front. Bật **Appearance → Cuboid orientation** để xem hướng; `sync` tạo ảnh `preview` tại `work/xem/` để đối chiếu camera.
 
 ## 2. Đọc frame (Bước 2)
 Hai frame đọc kỹ: `s01f01` và `s01f17`. Tên gốc của bốn ảnh: `t1-s01f01-3d`, `t1-s01f01-top`, `t1-s01f17-3d`, `t1-s01f17-top` (đuôi `.png` hoặc `.jpg` theo file đã lưu). Ảnh nhìn từ trên xuống có đánh dấu phía trước, +x, +y.
@@ -34,6 +48,7 @@ Camera cũng thấy được cọc tiêu và hình dạng vật; điểm khác b
 Tám frame lướt:
 
 | Frame | Phía trước ở cạnh nào của ảnh nhìn từ trên xuống | Điều lạ (nếu có) |
+|---|---|---|
 | s02f00 | Phía trước (−y) hướng về giữa cạnh trên của ảnh nhìn từ trên xuống. |Không ghi nhận điều lạ. |
 | s02f29 | Phía trước (−y) hướng về giữa cạnh trên của ảnh nhìn từ trên xuống. | Không ghi nhận điều lạ. |
 | s03f22 | Phía trước (−y) hướng về giữa cạnh trên của ảnh nhìn từ trên xuống. | Không ghi nhận điều lạ.|
@@ -44,46 +59,96 @@ Tám frame lướt:
 | s05f18 | Phía trước (−y) hướng về giữa cạnh trên của ảnh nhìn từ trên xuống. | Không ghi nhận điều lạ. |
 
 ## 3. Ba cuboid có hướng dẫn (Bước 3)
-Ảnh: `t2-a-car`, `t2-b-bus-truck`, `t2-c-ped-cyclist`.
 
-| Vật | Frame, idx | Class | Mũi tên yaw đúng hướng? | Đáy chạm đường? | Đã kiểm Top/Side/Front + ảnh? | Kích thước trong bảng 4.3? |
+Ba hộp dưới đây được chọn từ bảng A để đối chiếu số liệu. TODO(học viên): xác nhận đây là các hộp dùng cho ba ảnh mẫu; nếu chọn ảnh hộp khác thì cập nhật frame/idx tương ứng. Chưa xác nhận hướng đúng theo vật thật hoặc đã kiểm đủ ba view chỉ bằng số liệu.
+
+| Vật | Frame, idx | Class | Yaw | Đáy / mặt đường cục bộ | Top/Side/Front + camera | Kích thước so bảng 4.3 |
 |---|---|---|---|---|---|---|
-| (a) xe con gần | TODO(học viên) | | | | | |
-| (b) xe buýt hoặc xe tải | TODO(học viên) | | | | | |
-| (c) người đi bộ hoặc xe hai bánh | TODO(học viên) | | | | | |
+| (a) xe con gần | s01f01, #1 | Car | 272.3°; cần xác nhận đầu vật | z đáy -1.784 m; gap 0.03 m | TODO(học viên): xác nhận trên CVAT | 4.631 × 1.840 × 1.500 m. Sedan: cả dài, rộng, cao trong khoảng. |
+| (b) xe tải | s01f01, #23 | Truck | 86.5°; cần xác nhận đầu vật | z đáy -1.508 m; chưa đủ điểm để ước lượng mặt đường cục bộ | TODO(học viên): xác nhận trên CVAT | 6.685 × 2.527 × 2.484 m. Xe tải hộp/nhẹ: cả dài, rộng, cao trong khoảng. |
+| (c) người đi bộ | s01f01, #9 | Pedestrian | 87.2°; cần xác nhận đầu vật | z đáy -1.754 m; gap 0.03 m | TODO(học viên): xác nhận trên CVAT | 0.859 × 0.518 × 1.813 m. Người lớn: cả dài, rộng, cao trong khoảng. |
 
-TODO(học viên): vòng hiệu chuẩn: cuboid của bạn lệch so với các bạn ở điểm nào, cả lớp chốt cách hiểu guideline nào? Và các vật bạn **bỏ qua vì không đủ cơ sở** (frame, vị trí, mô tả, loại nghi vấn như UNCERTAIN_CLASS / LOW_VISIBILITY), hoặc ghi "không có".
+Ảnh cần bổ sung: `t2-a-car.png`, `t2-b-bus-truck.png`, `t2-c-ped-cyclist.png` (hoặc `.jpg`).
+
+Vòng hiệu chuẩn: đã tạo task `D13-HC485087`, vẽ và xuất ba Car ở `s01f19` vào `work/hieuchuan/D13-HC485087-2A202603269-bangA.csv`. Cuboid trong task chung không tính vào bài cá nhân. TODO(học viên): ghi kết luận thực tế của coach/vòng hiệu chuẩn và vật bỏ qua vì không đủ cơ sở; nếu không có thì ghi rõ sau khi kiểm tra.
 
 ## 4. Bốn hiện tượng chất lượng (Bước 4)
-Nguyên nhân ghi là **giả thuyết**. Frame mượn thì ghi rõ nguồn: task chung, hoặc MSSV của bạn cho mượn.
 
-| Hiện tượng | Frame / tên ảnh / nguồn | Nguyên nhân (giả thuyết) | Thấy gì trên point cloud | Hệ quả khi gán (theo guideline) |
+Đã chọn bốn ảnh minh họa. Bóng che và điểm lạ lấy từ task chung `D13-HC485087`; thưa ở xa và ít điểm bất thường lấy từ `pointcloud/s01f01.pcd` trong task cá nhân `D13-2A202603269`. Vị trí hai hiện tượng trong task chung tham khảo `docs/PHENOMENA.md`. Hai hiện tượng ở `s01f01` được mô tả theo quan sát học viên cung cấp, chưa có khoảng cách đo cụ thể. Nguyên nhân được nêu dưới dạng giả thuyết.
+
+| Hiện tượng | Frame / ảnh / nguồn | Nguyên nhân có thể kiểm tra | Biểu hiện thực tế | Hệ quả theo guideline |
 |---|---|---|---|---|
-| 1. Bóng che | TODO(học viên) | | | |
-| 2. Thưa ở xa | TODO(học viên) | | | |
-| 3. Phản xạ thấp / ít điểm bất thường | TODO(học viên) | | | |
-| 4. Điểm lạ | TODO(học viên) | | | |
+| Bóng che | `s03f00`; `t4-1-bong-che.png`; nguồn: task chung `D13-HC485087` | Tường có thể chặn tia LiDAR, làm vùng phía sau thiếu điểm. | Vùng sau tường quây công trình bên trái xe thu dữ liệu, khoảng 6 m theo tài liệu tham khảo: ít hoặc không có điểm phía sau bề mặt tường, làm mất thông tin về vùng bị khuất. | Vùng thiếu điểm phía sau vật che là vùng chưa quan sát được, không mặc nhiên là đường trống. Chỉ bật occluded khi xác định có vật bị che; bao phần suy luận có cơ sở. |
+| Thưa ở xa | `s01f01` (`pointcloud/s01f01.pcd`); `t4-2-thua-o-xa.png`; nguồn: task cá nhân `D13-2A202603269` | Khoảng cách có thể làm số tia LiDAR trúng vật giảm, khiến hình dạng khó nhận ra. | Ở vùng phía sau xe thu dữ liệu, một cụm điểm của vật chưa xác định nằm xa; các điểm rời rạc và đường bao không rõ. | Vẽ khi thấy khoảng 15–20% thể tích hoặc có đủ cơ sở suy luận; nếu không đủ cơ sở xác định hình dạng thì bỏ qua, ghi LOW_VISIBILITY. |
+| Phản xạ thấp / ít điểm bất thường | `s01f01` (`pointcloud/s01f01.pcd`); `t4-3-phan-xa-thap.png`; nguồn: task cá nhân `D13-2A202603269` | Vật liệu, góc tới hoặc che khuất có thể làm giảm số điểm phản hồi; chưa đủ cơ sở khẳng định phản xạ thấp. | Một vật ở xa có các mảng bề mặt thiếu điểm, hình dạng trên point cloud không liên tục và ít điểm LiDAR hơn vật khác ở khoảng cách tương tự theo quan sát. | Đối chiếu camera và vật cùng tầm; không nới hộp tùy tiện hoặc khẳng định nguyên nhân khi chưa đủ bằng chứng. |
+| Điểm lạ | `s02f35`; `t4-4-diem-la.png`; nguồn: task chung `D13-HC485087` | Có thể là nhiễu hoặc phản xạ nhiều đường; nguyên nhân chưa xác định. | Cụm điểm phía sau bên trái nằm thấp bất thường dưới mặt đường, tách khỏi bề mặt đường; thấy rõ hơn khi nhìn nghiêng. Vị trí dựa trên gợi ý trong tài liệu của lab. | Không gán cụm điểm bất thường thành một vật nếu không có cơ sở; không khẳng định nguyên nhân chỉ từ hình dạng cụm điểm. |
 
 ## 5. Số từ cuboid của tôi (Bước 5)
-Lấy từ `submission/D13-<MÃ SỐ>-bangA.csv`; số điểm lấy từ cột `points_in` của `-tukiem.csv`. Mặt đường khoảng −1,7 m: z đáy lệch hơn 0,3 m là lơ lửng hoặc chìm.
 
-| Cuboid (frame, idx, class) | z | h | z đáy = z − h/2 | dist_m | r = √(x²+y²+z²) | yaw_deg | Nhận xét (lơ lửng / chìm / chạm đường) |
-|---|---|---|---|---|---|---|---|
-| TODO(học viên) | | | | | | | |
-| TODO(học viên) | | | | | | | |
-| TODO(học viên) | | | | | | | |
+Nguồn: `submission/D13-2A202603269-bangA.csv` và `submission/D13-2A202603269-tukiem.csv` bản hiện tại. Ghép hai bảng bằng `(frame, idx)`; số điểm lấy từ `points_in`. Khoảng cách ngang `dist_m = √(x²+y²)` và khoảng cách 3D `r = √(x²+y²+z²)` đều đo tới tâm hộp. Các kết quả tính từ số đã làm tròn trong CSV có thể chênh 0,001 m so với giá trị xuất từ dữ liệu gốc.
 
-TODO(học viên): (a) cuboid **gần nhất** và **xa nhất**: `dist_m` và r của từng cái. (b) Kích thước l, w, h của một người đi bộ (hoặc xe hai bánh) và một xe con so với bảng 4.3: chiều nào ngoài khoảng, vì sao. (c) `yaw_deg` của một xe cùng chiều phía trước và một xe ngược chiều (nếu có): có gần 270° và 90° không.
+| Cuboid | z (m) | h (m) | z − h/2 (m) | z_bottom trong CSV (m) | dist_m (m) | r (m) | yaw (°) | Nhận xét theo số đo |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| s01f01 #1 Car | -1.034 | 1.500 | -1.7840 | -1.784 | 4.18 | 4.303 | 272.3 | Đáy gần mặt đường cục bộ; ground_gap_m = +0.03 m. |
+| s01f01 #23 Truck | -0.266 | 2.484 | -1.5080 | -1.508 | 41.39 | 41.392 | 86.5 | Chưa đủ điểm để ước lượng mặt đường cục bộ. |
+| s01f01 #9 Pedestrian | -0.848 | 1.813 | -1.7545 | -1.754 | 16.39 | 16.415 | 87.2 | Đáy gần mặt đường cục bộ; ground_gap_m = +0.03 m. |
 
-Mật độ theo khoảng cách (4 cuboid ở các `dist_m` khác nhau):
+**Cuboid gần nhất và xa nhất:**
 
-| Cuboid (frame, idx, class) | dist_m | Số điểm (`points_in`) |
-|---|---|---|
-| TODO(học viên) | | |
+- Gần nhất toàn bảng A: `s05f03 #1 Car`, dist_m = **3.28 m**, r = **3.389 m**.
+- Xa nhất toàn bảng A: `s01f01 #24 Car`, dist_m = **56.85 m**, r = **56.865 m**.
+- Xa nhất trong vùng ≤ 50 m: `s03f22 #14 Car`, dist_m = **48.29 m**, r = **48.300 m**.
 
-TODO(học viên): một câu quy luật ("xa gấp … lần thì số điểm còn khoảng …") và so với đường cong ở slide bài giảng (xe con: khoảng 1968 điểm ở 0–10 m, 718 ở 10–20 m, 214 ở 20–30 m, 72 ở 30–40 m, 19 ở 60–80 m). Rồi phần tự kiểm: hai cuboid bạn **đã sửa** sau `preview` / `selfcheck` (frame, idx, sửa gì), và những cảnh báo bạn **giữ nguyên** kèm lý do.
+Hộp xa nhất toàn bảng A nằm ngoài phạm vi 50 m nên không được chấm. Mặt đường khoảng −1,7 m là tham chiếu chung; khi đánh giá đáy cần xét mặt đường cục bộ, không suy mọi hộp lệch mức này đều sai.
 
-TODO(học viên): đổi kiểm: MSSV người đã kiểm chéo với bạn, hai con số nào được đối chiếu với bảng A, khớp hay lệch (lệch thì đã sửa gì).
+**So kích thước với bảng 4.3:**
+
+- `s01f01 #1 Car`: dài 4.631 m, rộng 1.840 m, cao 1.500 m; đều nằm trong khoảng sedan/hatchback (3,8–5,0 m; 1,70–1,90 m; 1,40–1,60 m).
+- `s01f01 #9 Pedestrian`: dài 0.859 m, rộng 0.518 m, cao 1.813 m; đều nằm trong khoảng người lớn (0,4–0,9 m; 0,5–0,9 m; 1,50–1,95 m). Hai hộp được chọn không có chiều ngoài khoảng tham chiếu; điều này chưa chứng minh hộp khớp vật thật.
+
+**Hướng:** `s01f01 #1 Car` có y = -2.736 m (phía trước) và yaw = 272.3°, gần 270° theo quy ước cùng chiều. `s03f22 #2 Car` có yaw = 90.1°, gần 90° theo quy ước ngược chiều. TODO(học viên): đối chiếu đầu xe trên camera trước khi xác nhận hai hướng thực tế.
+
+**Số điểm theo khoảng cách — bốn Car trong cùng frame:**
+
+| Cuboid | dist_m (m) | points_in |
+|---|---:|---:|
+| s01f01 #1 Car | 4.18 | 2988 |
+| s01f01 #4 Car | 13.61 | 604 |
+| s01f01 #10 Car | 21.00 | 328 |
+| s01f01 #21 Car | 30.72 | 213 |
+
+Trong hai đầu của mẫu, khoảng cách tăng 7.35 lần, số điểm từ 2988 xuống 213, còn khoảng 7.1%. Bốn xe là các vật khác nhau nên không thể quy toàn bộ thay đổi cho khoảng cách: kích thước, hướng, che khuất và mức khớp hộp cũng ảnh hưởng. Slide nêu trung vị xe con khoảng 1968, 718, 214 và 72 điểm lần lượt cho 0–10, 10–20, 20–30 và 30–40 m; đây là tham chiếu thống kê, không phải ngưỡng đạt cho từng xe.
+
+**Hai lần kiểm lại theo log:** cả ba lần `sync` đều có 121 hộp; số hộp bị cờ giảm 20 → 19 → 18.
+
+| Hộp | Lần đầu | Lần kiểm lại thứ nhất | Bản cuối | Điều log chứng minh |
+|---|---|---|---|---|
+| s05f18 #8 Car | Đáy cao hơn đường 0,46 m; cao 2,43 m | Hết cờ đáy, còn chiều cao 2,84 m ngoài khoảng | Cao 2,300 m; không còn cờ | Số đo chiều cao và trạng thái cảnh báo đã thay đổi; cần xác nhận hình học trên CVAT. |
+| s05f18 #9 Car | Rộng 2,33 m ngoài khoảng của công cụ | Không còn cờ | Rộng 2,200 m; không còn cờ | Đã thay đổi chiều rộng và hết cảnh báo kích thước. |
+
+Không dùng việc hết cờ làm bằng chứng hộp đúng. Bản cuối còn 18 hộp bị cờ; TODO(học viên): ghi lý do thực tế cho các cảnh báo đã xem và quyết định giữ nguyên, hoặc sửa trên CVAT rồi Save và chạy lại sync để cập nhật báo cáo.
+
+**Trao đổi về hình học cuboid:** Tôi trao đổi với bạn có MSSV **2A202603290**. Bạn nhận xét cuboid xe con do bạn ấy vẽ dài hơn vì bao thêm một số điểm LiDAR ở đuôi xe. Khác biệt có thể đến từ cách xác định các điểm thuộc vật. Tôi cần kiểm tra lại vùng đuôi xe trên CVAT trước khi quyết định chỉnh chiều dài.
+
+Hiện tôi giữ nguyên hộp. TODO(học viên): sau khi kiểm tra, xác định các điểm được góp ý thuộc vật khác hay là nhiễu và bổ sung lý do giữ nguyên; chưa kết luận khi chưa xác định được nguồn điểm.
+
+**Kiểm chéo số liệu:** người trao đổi có MSSV **2A202603290**. Chuẩn bị đối chiếu hai số trong báo cáo này với bảng A của chính tôi (`D13-2A202603269-bangA.csv`) trên màn hình:
+
+| Cuboid | Đại lượng | Số trong báo cáo | Số trong bảng A của tôi | Trạng thái kiểm bởi bạn |
+|---|---|---:|---:|---|
+| s01f01 #1 Car | Chiều dài `length` | 4,631 m | 4,631 m | Bạn xác nhận là chưa khớp vì còn point cloud ở đuôi xe |
+| s01f01 #1 Car | Chiều cao `height` | 1,500 m | 1,500 m | Bạn xác nhận là chưa khớp vì còn point cloud ở nóc xe |
+
+Hai cặp số trên khớp qua đối chiếu dữ liệu, nhưng chưa có bằng chứng bạn 2A202603290 đã thực hiện kiểm chéo. TODO(học viên): sau khi hai người thực sự xem trên màn hình, ghi kết quả xác nhận, chỗ lệch và cách sửa nếu có; thực hiện đối chiếu ngược lại trên máy của bạn ấy. Không dùng bảng A của bạn ấy thay cho số liệu của tôi và không đưa file của bạn ấy vào repo.
 
 ## 6. Ý nghĩa của nhãn, cách dùng AI và điều còn chưa chắc
-TODO(học viên): (a) hai câu, nói từ phía model sẽ học trên nhãn này: vì sao nhãn 3D đo bằng mét chứ không phải pixel; vì sao vật thưa điểm cần quy tắc riêng. (b) Dùng AI? Ghi 3 dòng: công cụ, câu hỏi chính, bạn dùng kết quả thế nào. Không dùng: ghi "không dùng". (c) Điều còn chưa chắc, lỗi phát hiện sau hạn (không chấm; viết bằng lời, không chép số từ phiếu hồ sơ lỗi).
+
+Nhãn 3D dùng mét để model học vị trí và kích thước vật trong không gian thực; kích thước pixel thay đổi theo khoảng cách và phép chiếu camera. Vật thưa điểm cần quy tắc riêng để tránh đưa các hộp phỏng đoán thiếu căn cứ vào dữ liệu huấn luyện, đồng thời vẫn giữ những vật có đủ bằng chứng từ LiDAR và camera.
+
+**Cách dùng AI:**
+
+- Công cụ: ChatGPT/Codex.
+- Câu hỏi chính: setup dữ liệu và CVAT, hệ tọa độ và hướng camera, thao tác cuboid, lệnh sync và yêu cầu bài nộp; hỗ trợ biên tập báo cáo và tính các số từ CSV của cá nhân.
+- Cách dùng kết quả: dùng hướng dẫn để thao tác local và tổ chức báo cáo; AI đã hỗ trợ diễn đạt mục 2, đối chiếu kích thước hiệu chuẩn, tổng hợp log và tính số liệu mục 5. Phần dùng AI này được khai báo đúng thực tế, không ghi là “không dùng”.
+
+**Điều còn chưa chắc:** cảnh báo còn lại chưa có giải thích quan sát cho từng hộp; vị trí chính xác của bốn hiện tượng và hướng đầu vật cần được tự kiểm tra trên CVAT. Ước lượng 100 m/200 m ở mục 2 chưa được xác nhận bằng phép đo. Cảnh báo phiên bản Server 2.74.1/SDK 2.83.0 cần lưu ý khi đối chiếu kết quả xuất. Chưa có nhãn chuẩn nên không tự kết luận recall, IoU hay điểm đạt chỉ từ số hộp và selfcheck.
